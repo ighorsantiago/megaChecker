@@ -1,8 +1,3 @@
-// src/data/games.ts
-// Alimente este arquivo com os jogos (normalizados no formato '01-05-13-24-44-60').
-// Dica: se você tiver os números soltos, normalize previamente no seu script,
-// ou cole aqui já normalizado para acelerar o carregamento.
-
 export const GAMES: string[] = [
   '01-11-13-14-36-45',
   '03-07-08-34-35-51',
