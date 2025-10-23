@@ -16,10 +16,38 @@ function normalizeSixNumbers(input: string): string | null {
   return sorted.map(pad2).join('-')
 }
 
+// Random seguro quando disponível
+function randIntInclusive(min: number, max: number): number {
+  const g = (window as any).crypto?.getRandomValues
+  if (g) {
+    const arr = new Uint32Array(1)
+      ; (window as any).crypto.getRandomValues(arr)
+    return min + (arr[0] % (max - min + 1))
+  }
+  return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
+function generateUniqueGame(existing: Set<string>, maxAttempts = 100000): string | null {
+  const tried = new Set<string>()
+  for (let i = 0; i < maxAttempts; i++) {
+    const s = new Set<number>()
+    while (s.size < 6) s.add(randIntInclusive(1, 60))
+    const sorted = Array.from(s).sort((a, b) => a - b)
+    const key = sorted.map(pad2).join('-')
+    if (tried.has(key)) continue
+    tried.add(key)
+    if (!existing.has(key)) return key
+  }
+  return null // esgotou tentativas
+}
+
 export default function App() {
   const [query, setQuery] = useState<string>('')
   const [result, setResult] = useState<'none' | 'hit' | 'miss'>('none')
   const [hint, setHint] = useState<string>('')
+
+  const [generated, setGenerated] = useState<string>('')
+  const [genMsg, setGenMsg] = useState<string>('')
 
   const normalizedQuery = useMemo(() => normalizeSixNumbers(query) ?? '', [query])
 
@@ -38,6 +66,28 @@ export default function App() {
     setQuery('')
     setResult('none')
     setHint('')
+  }
+
+  async function copy(text: string) {
+    try {
+      await navigator.clipboard.writeText(text)
+      setGenMsg('Copiado para a área de transferência.')
+      setTimeout(() => setGenMsg(''), 1500)
+    } catch {
+      setGenMsg('Falha ao copiar (permissão negada?).')
+      setTimeout(() => setGenMsg(''), 2000)
+    }
+  }
+
+  function handleGenerate() {
+    const key = generateUniqueGame(GAME_SET)
+    if (key) {
+      setGenerated(key)
+      setGenMsg('Gerado um jogo que não existe na base.')
+    } else {
+      setGenerated('')
+      setGenMsg('Não foi possível encontrar um jogo inédito nas tentativas.')
+    }
   }
 
   return (
@@ -84,6 +134,33 @@ export default function App() {
                 )}
               </div>
             )}
+          </div>
+          {/* Gerar novo */}
+          <div className="bg-gray-50 rounded-2xl p-4 md:p-6">
+            <div className="flex items-center justify-between gap-3 mb-3">
+              <h2 className="text-lg font-semibold">Gerar jogo inédito</h2>
+              <button onClick={handleGenerate} className="px-4 py-2 rounded-xl bg-indigo-600 text-white hover:opacity-90 active:scale-[0.99] transition">
+                Gerar
+              </button>
+            </div>
+            {generated ? (
+              <div className="rounded-xl p-4 border bg-white flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-sm text-gray-600">Jogo sugerido (não cadastrado):</p>
+                  <p className="font-mono text-xl font-semibold mt-1">{generated}</p>
+                </div>
+                <div className="flex gap-2 shrink-0">
+                  <button onClick={() => copy(generated)} className="px-3 py-2 rounded-lg border hover:bg-gray-50">Copiar</button>
+                </div>
+              </div>
+            ) : (
+              <p className="text-sm text-gray-600">Clique em "Gerar" para sugerir uma combinação que não exista no arquivo.</p>
+            )}
+            {genMsg && <p className="text-sm text-gray-700 mt-2">{genMsg}</p>}
+          </div>
+
+          <div className="mt-6 text-xs text-gray-500">
+            <p>Observação: a geração tenta até 100.000 combinações diferentes para achar uma inédita (improvável precisar de tanto).</p>
           </div>
         </div>
       </div>
