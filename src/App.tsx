@@ -83,7 +83,7 @@ export default function App() {
     const key = generateUniqueGame(GAME_SET)
     if (key) {
       setGenerated(key)
-      setGenMsg('Gerado um jogo que não existe na base.')
+      // setGenMsg('Gerado um jogo que não existe na base.')
     } else {
       setGenerated('')
       setGenMsg('Não foi possível encontrar um jogo inédito nas tentativas.')
@@ -98,7 +98,7 @@ export default function App() {
             <div>
               <h1 className="text-2xl md:text-3xl font-bold">Verificador de Jogos da Mega-Sena</h1>
               <p className="text-sm md:text-base text-gray-600 mt-1">
-                Sabia que os jogos da Mega Sena não se repetem?
+                Sabia que os jogos da Mega Sena nunca se repetiram?
                 {/* <strong>{TOTAL.toLocaleString()}</strong>. */}
               </p>
               <p className="text-sm md:text-base text-gray-600 mt-1">
@@ -146,21 +146,18 @@ export default function App() {
             {generated ? (
               <div className="rounded-xl p-4 border bg-white flex items-center justify-between gap-3">
                 <div>
-                  <p className="text-sm text-gray-600">Jogo sugerido (não cadastrado):</p>
+                  <p className="text-sm text-gray-600">Jogo sugerido:</p>
                   <p className="font-mono text-xl font-semibold mt-1">{generated}</p>
-                </div>
-                <div className="flex gap-2 shrink-0">
-                  <button onClick={() => copy(generated)} className="px-3 py-2 rounded-lg border hover:bg-gray-50">Copiar</button>
                 </div>
               </div>
             ) : (
-              <p className="text-sm text-gray-600">Clique em "Gerar" para sugerir uma combinação que não exista no arquivo.</p>
+              <p className="text-sm text-gray-600">Clique em "Gerar" para sugerir uma combinação que ainda não foi sorteada.</p>
             )}
             {genMsg && <p className="text-sm text-gray-700 mt-2">{genMsg}</p>}
           </div>
 
           <div className="mt-6 text-xs text-gray-500">
-            <p>Observação: a geração tenta até 100.000 combinações diferentes para achar uma inédita (improvável precisar de tanto).</p>
+            <p>Observação: Não existe garantia de ganhar, é apenas um número que nunca foi sorteado antes.</p>
           </div>
         </div>
       </div>
