@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react'
 import { GAME_SET, TOTAL } from './data/games'
 
-// ---------- Utilidades ----------
 const pad2 = (n: number) => n.toString().padStart(2, '0')
 
 function normalizeSixNumbers(input: string): string | null {
@@ -16,7 +15,6 @@ function normalizeSixNumbers(input: string): string | null {
   return sorted.map(pad2).join('-')
 }
 
-// Random seguro quando disponível
 function randIntInclusive(min: number, max: number): number {
   const g = (window as any).crypto?.getRandomValues
   if (g) {
@@ -38,7 +36,7 @@ function generateUniqueGame(existing: Set<string>, maxAttempts = 100000): string
     tried.add(key)
     if (!existing.has(key)) return key
   }
-  return null // esgotou tentativas
+  return null
 }
 
 export default function App() {
@@ -83,7 +81,6 @@ export default function App() {
     const key = generateUniqueGame(GAME_SET)
     if (key) {
       setGenerated(key)
-      // setGenMsg('Gerado um jogo que não existe na base.')
     } else {
       setGenerated('')
       setGenMsg('Não foi possível encontrar um jogo inédito nas tentativas.')
@@ -99,7 +96,6 @@ export default function App() {
               <h1 className="text-2xl md:text-3xl font-bold">Verificador de Jogos da Mega-Sena</h1>
               <p className="text-sm md:text-base text-gray-600 mt-1">
                 Sabia que os jogos da Mega Sena nunca se repetiram?
-                {/* <strong>{TOTAL.toLocaleString()}</strong>. */}
               </p>
               <p className="text-sm md:text-base text-gray-600 mt-1">
                 Teste aqui o seu jogo para saber se ele já foi sorteado alguma vez.
