@@ -135,8 +135,8 @@ export default function App() {
               </div>
             )}
           </div>
-          {/* Gerar novo */}
-          <div className="bg-gray-50 rounded-2xl p-4 md:p-6">
+
+          <div className="bg-gray-50 rounded-2xl p-4 md:p-6 mt-6">
             <div className="flex items-center justify-between gap-3 mb-3">
               <h2 className="text-lg font-semibold">Gerar jogo inédito</h2>
               <button onClick={handleGenerate} className="px-4 py-2 rounded-xl bg-indigo-600 text-white hover:opacity-90 active:scale-[0.99] transition">
